@@ -1,0 +1,273 @@
+﻿<Window x:Class="Batch_rename.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Batch_rename"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Window.Resources>        
+        <local:BooleanToVisibilityConverter  x:Key="HiddenElement"/>
+        <local:FalseBooleanToVisibilityConverter  x:Key="FalseHiddenElement"/>
+
+        <Style TargetType="{x:Type GridViewColumnHeader}" >
+            <Setter Property="MinWidth" Value="90" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+
+        <WrapPanel Margin="0,8,0,0">
+            <Button x:Name="reloadButton" Background="White" Width="70"  Height="28" Margin="8,0,0,0" BorderThickness="0,0,1,0" ClipToBounds="True" Click="ReloadButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Images/refresh.png" Width="16" Height="16"/>
+                    <TextBlock Text="Refresh" VerticalAlignment="Center" Margin="4,0,0,0" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="importButton" Background="White" Width="110" Height="28" Margin="4,0,0,0" BorderThickness="0,0,1,0" Click="ImportButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Images/import-icon.png" Width="16" Height="16"/>
+                    <TextBlock Text="Import Method" VerticalAlignment="Center" Margin="4,0,0,0" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="exportButton" Background="White" Width="112" Height="28" Margin="4,0,0,0" BorderThickness="0,0,1,0" Click="ExportButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Images/export-icon.png" Width="16" Height="16"/>
+                    <TextBlock Text="Export Method" VerticalAlignment="Center" Margin="4,0,0,0" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="playButton" Background="White" Width="110" Height="28" Margin="4,0,0,0" BorderThickness="0,0,1,0" Click="PlayButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Images/play.png" Width="16" Height="16"/>
+                    <TextBlock Text="START BATCH" VerticalAlignment="Center" Margin="4,0,0,0" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="previewButton" Background="White" Width="110" Height="28" Margin="4,0,0,0" BorderThickness="0" Click="PreviewButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Images/preview-icon.png" Width="16" Height="16"/>
+                    <TextBlock Text="Preview Name" VerticalAlignment="Center" Margin="4,0,0,0" />
+                </StackPanel>
+            </Button>
+        </WrapPanel>
+
+
+
+        <Border BorderBrush="#FFB4B4B4" BorderThickness="1" HorizontalAlignment="Left" Height="375" Margin="0,44,0,0" VerticalAlignment="Top" Width="308">
+            <StackPanel>
+                <Border BorderBrush="#FFD1D1D1" BorderThickness="0,0,0,1">
+                    <WrapPanel Height="40">
+                        <Button x:Name="addMethodButton" Margin="8,4,0,0" Width="100" Height="30" Background="White" BorderThickness="0,0,1,0" Click="AddMethodButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Images/add-method.png" Width="16" Height="16"/>
+                                <TextBlock Text="Add Method" VerticalAlignment="Center" Margin="4,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="clearAllButton" Padding="0,0,5,0" Margin="8,4,0,0" Width="70" Height="24" Background="White" BorderThickness="0,0,1,0" Click="ClearAllButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Images/clear-all-icon.jpg" Width="16" Height="16"/>
+                                <TextBlock Text="Clear All" VerticalAlignment="Center" Margin="4,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="moveToTopButton" Padding="0" Margin="8,4,0,0" Width="24" Height="24" Background="White" BorderThickness="0" Click="MoveToTopButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Images/move-to-top.png" Width="16" Height="16"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="moveUpButton" Padding="0" Margin="4,4,0,0" Width="24" Height="24" Background="White" BorderThickness="0" Click="MoveUpButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Images/up-icon.png" Width="16" Height="16"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="moveDownButton" Padding="0" Margin="4,4,0,0" Width="24" Height="24" Background="White" BorderThickness="0" Click="MoveDownButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Images/down-icon.png" Width="16" Height="16"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="moveToBottomButton" Padding="0" Margin="4,4,0,0" Width="24" Height="24" Background="White" BorderThickness="0" Click="MoveToBottomButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Images/move-top-bottom.png" Width="16" Height="16"/>
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+                </Border>
+
+
+
+                <ListBox Name="operationsListBox" Height="320" SelectionChanged="ListView_SelectionChanged">
+                    <ListBox.Resources>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Style.Triggers>
+                                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                    <Setter Property="IsSelected" Value="True"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.Resources>
+                    
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel  Margin="0,4">
+                                <Expander IsExpanded="True">
+                                    <Expander.Header >
+                                        <StackPanel Orientation="Horizontal" Width="245" >
+                                            <WrapPanel Width="224" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <CheckBox Margin="8,1,8,0" IsChecked="{Binding isActive}"></CheckBox>
+                                                <TextBlock FontWeight="Bold" Text="{Binding Name}" />
+                                            </WrapPanel>                                              
+                                            
+                                            <Button x:Name="deleteActionBtn"  Click="DeleteActionBtn_Click">
+                                                <Image Source="Images/trash-icon.png" Width="16" Height="16"/>
+                                            </Button>                                         
+                                        </StackPanel>                         
+                                    </Expander.Header>
+                                    <Border BorderBrush="#FFD1D1D1" BorderThickness="1" Width="270">
+                                        <StackPanel Orientation="Vertical" Margin="8,4,8,8">
+                                            <StackPanel  Orientation="Vertical" Margin="0,8,0,0"  Visibility= "{Binding Name, Converter={StaticResource HiddenElement}, ConverterParameter='Replace'}">
+                                                <Label>From:</Label>
+                                                <TextBox Height="40" Text="{Binding Args.From}"></TextBox>
+                                                <TextBlock Margin="2,-1,0,0" FontSize="11" TextWrapping="Wrap">If From is set to null or empty, it will be ignored</TextBlock>
+                                                <Label>To:</Label>
+                                                <TextBox Height="40" Text="{Binding Args.To}"></TextBox>                                                
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Vertical"  Visibility= "{Binding Name, Converter={StaticResource HiddenElement}, ConverterParameter='New Case'}">
+                                                <ComboBox Name="typeNewCaseComboBox" SelectionChanged="typeNewCaseComboBox_SelectionChanged" ItemsSource="{Binding typesNewCase}"  SelectedValue="{Binding Args.Type}">                                                  
+                                                </ComboBox>                                                
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Vertical"  Visibility= "{Binding Name, Converter={StaticResource HiddenElement}, ConverterParameter='Move'}">
+                                                <ComboBox Name="typesPositionComboBox" SelectionChanged="TypesPositionComboBox_SelectionChanged" ItemsSource="{Binding typesPosition}"  SelectedValue="{Binding Args.Position}">
+                                                </ComboBox>
+                                            </StackPanel>
+                                            
+                                            <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Description}"
+                                                       Visibility= "{Binding Name, Converter={StaticResource FalseHiddenElement}, ConverterParameter='Replace'}"></TextBlock>
+                                            
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </Border>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="375" Margin="308,44,0,0" VerticalAlignment="Top">
+            <TabItem Header="Rename Files">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.Row="0" VerticalAlignment="Center" Margin="12,0,0,0" >
+                        <Button x:Name="addFileButton" Width="50" Height="24" Background="White" Click="AddFileButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Images/add-icon.jpg" Width="16" Height="16"/>
+                                <TextBlock Text="Add" VerticalAlignment="Center" Margin="4,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+                    <ListView Grid.Row="1" Name="listFiles">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Filename" Width="150" DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Header="New Filename" Width="150" DisplayMemberBinding="{Binding NewName}" />
+                                
+                                <GridViewColumn Header="Error" Width="90" DisplayMemberBinding="{Binding Error}" />
+                                <GridViewColumn Header="Path"  Width="auto" DisplayMemberBinding="{Binding Path}" />
+                            </GridView>
+                        </ListView.View>
+                        
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="BorderBrush" Value="LightGray" />
+                                <Setter Property="BorderThickness" Value="0,0,0,1" />                               
+                            </Style>                           
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Rename Folders">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.Row="0" VerticalAlignment="Center" Margin="12,0,0,0" >
+                        <Button x:Name="addFolderButton" Width="50" Height="24" Background="White" Click="AddFolderButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Images/add-icon.jpg" Width="16" Height="16"/>
+                                <TextBlock Text="Add" VerticalAlignment="Center" Margin="4,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+                    <ListView Grid.Row="1" Name="listFolders">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Filename" Width="150" DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Header="New Filename" Width="150" DisplayMemberBinding="{Binding NewName}" />
+                                
+                                <GridViewColumn Header="Error" Width="90" DisplayMemberBinding="{Binding Error}" />
+                                <GridViewColumn Header="Path" Width="auto" DisplayMemberBinding="{Binding Path}" />
+                            </GridView>
+                        </ListView.View>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="BorderBrush" Value="LightGray" />
+                                <Setter Property="BorderThickness" Value="0,0,0,1" />
+
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <Border x:Name="modalContainer" Background="#90000000"  Visibility="Hidden">
+            <Border BorderBrush="#FFCFCFCF" Background="White" 
+
+                CornerRadius="20" VerticalAlignment="Center"
+
+                HorizontalAlignment="Center" Height="305" Margin="187,66,146,48" BorderThickness="1">
+
+                <Grid>
+                    <Label x:Name="modalTitle" Content="&#x9;&#x9;Select Method" HorizontalAlignment="Center" Margin="0,1,0,254" FontSize="20" Height="40" FontWeight="Bold" FontFamily="Segoe UI Symbol" Foreground="#FF1FC7BF" Width="457" BorderBrush="#FFB2B2B2" BorderThickness="0,0,0,1" SnapsToDevicePixels="True" VerticalAlignment="Center"/>
+                    <Button x:Name="btnCloseModal" Content="X" HorizontalAlignment="Left" Margin="408,10,0,0" VerticalAlignment="Top" Width="30" Height="30" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Foreground="#FF424242" ForceCursor="True" Click="BtnCloseModal_Click"/>
+
+                    <ListView Name="prototypesListView" Margin="10,68,10,10" BorderThickness="0" 
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Top" BorderBrush="{x:Null}">
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                        <Setter Property="IsSelected" Value="True"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Resources>
+                                                
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel  Margin="0,8">
+                                    <Button x:Name="btnAddMethod" Tag=""  Click="BtnAddMethod_Click" Content="{Binding Name}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="38" FontSize="18" Background="#F5F5F5" BorderBrush="{x:Null}" Foreground="#FF9E9E9E">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="4"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+
+            </Border>
+        </Border>
+    </Grid>
+</Window>
